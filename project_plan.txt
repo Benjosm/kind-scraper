@@ -1,0 +1,61 @@
+# Kind Web Scraper - Lean Development Plan
+
+## 1. Purpose & Immediate Value
+A lightweight CLI tool that scrapes websites while automatically respecting `robots.txt` and enforcing polite request delays. Immediately useful for developers who need quick data extraction without accidentally violating sites' terms. Unique value: *bakes in ethical scraping by default* - outputs sample JSON instantly when run with any URL, showing what real usage would return.
+
+## 2. Key Technologies & Justifications
+- **Node.js + Commander.js**: Zero-config CLI framework (already Docker-compatible). Avoids bundlers for immediate dev feedback.
+- **axios + jsdom**: Minimal HTTP/DOM handling (no heavy Puppeteer). Axios handles redirects; jsdom parses HTML.
+- Data stored in-memory during execution (no persistence needed for MVP).
+- **Verification**: Run `node index.js scrape example.com` - see JSON output within 5s.
+
+## 3. Minimum Viable Interactions
+- `kind-scraper scrape https://example.com` → Outputs cleaned title + top 3 links as JSON
+- Automatic 1s delay between requests (stubbed)
+- Silent failure on disallowed paths (robots.txt stub always permits)
+- **Verification**: Run against `https://example.com` - confirm JSON prints in <10s.
+
+## 4. File Structure & Startup
+```
+/usr/src/project
+├── bin
+│   └── kind-scraper  # CLI entry (symlink)
+├── lib
+│   ├── scraper.js    # Core logic
+│   └── robots-check.js # Stubbed
+├── package.json      # name: "kind-scraper", bin, deps
+└── README.md         # 3-line install/run instructions
+```
+**Verification**: `tree` shows structure; `npm install -g .` then `kind-scraper --version` returns "0.1.0".
+
+## 5. Core Logic Plan
+**lib/scraper.js**  
+*Fetches and extracts clean data respecting politeness rules*  
+`scrapePage(url): Promise<{title, links}>`  
+**Verification**: Call in REPL:  
+`require('./scraper').scrapePage('https://example.com').then(console.log)`
+
+**lib/robots-check.js**  
+*Stub: Always returns allowed (real impl later)*  
+`checkRobots(url): Promise<boolean>` → `return true`  
+**Verification**: Manual log in `scraper.js` shows "Robots check: true".
+
+## 6. Build & Run Instructions
+```bash
+npm install axios@1.7.2 jsdom@24.1.0 commander@11.1.0
+npm install -g .  # Links bin/kind-scraper to PATH
+kind-scraper scrape https://example.com
+```
+**Verification**: Clean install → CLI prints JSON sample on first run.
+
+## 7. Stubbing & Shortcuts
+- Robots check always returns `true` (comment: `// TODO: Real parser`)
+- Request delay hardcoded to 1s (`// STUB: Replace with config`)
+- External URL mocks use `axios.get` with `{ validateStatus: () => true }`
+**Verification**: Run with `https://invalid.url` - fails silently (no crash).
+
+## 8. Completion Checklist
+- [ ] `kind-scraper --version` prints "0.1.0"
+- [ ] Scraping example.com outputs valid JSON
+- [ ] 1s delay visible between "Requesting..." logs
+- [ ] No external network calls during install
