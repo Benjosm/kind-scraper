@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+import { checkRobots } from '../src/robots-checker-stub.js';
+
+const someTestUrl = 'https://example.com'; // Placeholder URL for testing
+checkRobots(someTestUrl).then(result => {
+  console.log("Robots check: " + result);
+  console.log('Kind Scraper CLI initialized. Run "kind-scraper scrape <url>" to extract content.');
+}).catch(error => {
+  console.error("Robots check failed: ", error);
+});
