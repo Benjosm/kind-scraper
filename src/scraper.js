@@ -6,9 +6,6 @@ async function scrapePage(url) {
   console.log(`Requesting ${url}...`);
   
   try {
-    // Enforce 1-second delay between requests
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
     // Check robots.txt compliance
     const isAllowed = await checkRobots(url);
     console.log(`Robots check: ${isAllowed}`);
@@ -17,8 +14,14 @@ async function scrapePage(url) {
       return null;
     }
     
-    // Fetch the URL with axios
-    const response = await axios.get(url, { validateStatus: () => true });
+    // Enforce 1-second delay between requests after robots check
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Fetch the URL with axios as text to ensure response.data is a string
+    const response = await axios.get(url, { 
+      validateStatus: () => true,
+      responseType: 'text'
+    });
     
     // Check if response status is not 200
     if (response.status !== 200) {
@@ -45,6 +48,7 @@ async function scrapePage(url) {
     
     // Extract up to first 3 links
     const linkElements = document.querySelectorAll('a');
+    const seenLinks = new Set();
     const links = [];
     let count = 0;
     for (const element of linkElements) {
@@ -54,8 +58,11 @@ async function scrapePage(url) {
         try {
           // Resolve relative URLs to absolute
           const absoluteUrl = new URL(href, url).href;
-          links.push(absoluteUrl);
-          count++;
+          if (!seenLinks.has(absoluteUrl)) {
+            seenLinks.add(absoluteUrl);
+            links.push(absoluteUrl);
+            count++;
+          }
         } catch (err) {
           // Skip invalid URLs
           continue;
