@@ -1,0 +1,16 @@
+{
+  "name": "kind-scraper",
+  "version": "0.1.0",
+  "description": "Lightweight CLI web scraper respecting robots.txt",
+  "main": "lib/scraper.js",
+  "bin": {
+    "kind-scraper": "./bin/kind-scraper"
+  },
+  "dependencies": {
+    "axios": "1.7.2",
+    "jsdom": "24.1.0",
+    "commander": "11.1.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
