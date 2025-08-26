@@ -11,9 +11,9 @@ async function scrapePage(url) {
     
     // Check robots.txt compliance
     const isAllowed = await checkRobots(url);
+    console.log(`Robots check: ${isAllowed}`);
     
     if (!isAllowed) {
-      console.log("Robots check: false");
       return null;
     }
     
