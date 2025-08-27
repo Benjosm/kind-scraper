@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { JSDOM } = require('jsdom');
-const { checkRobots } = require('./robots-check');
+const { checkRobots } = require('./utils/robotsChecker');
 
 async function scrapePage(url) {
   console.log(`Requesting ${url}...`);
