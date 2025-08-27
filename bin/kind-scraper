@@ -10,7 +10,6 @@ program
   .command('scrape <url>')
   .description('Scrape a webpage and output structured JSON data')
   .action(async (url) => {
-    console.log("Requesting...");
     const result = await scrapePage(url);
     if (result !== null) {
       console.log(JSON.stringify(result));
