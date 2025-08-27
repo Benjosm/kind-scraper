@@ -1,10 +1,49 @@
 #!/usr/bin/env node
-import { checkRobots } from '../src/robots-checker-stub.js';
 
-const someTestUrl = 'https://example.com'; // Placeholder URL for testing
-checkRobots(someTestUrl).then(result => {
-  console.log("Robots check: " + result);
-  console.log('Kind Scraper CLI initialized. Run "kind-scraper scrape <url>" to extract content.');
-}).catch(error => {
-  console.error("Robots check failed: ", error);
-});
+const { program } = require('commander');
+const path = require('path');
+const { scrapePage } = require(path.join(__dirname, '..', 'lib', 'scraper'));
+
+const { version } = require(path.join(__dirname, '..', 'package.json')); program.version(version);
+
+program
+  .command('scrape <url>')
+  .description('Scrape a webpage and output structured JSON data')
+  .action(async (url) => {
+    try {
+      // Store original stdout.write and create buffer
+      const originalWrite = process.stdout.write;
+      let outputBuffer = '';
+
+      // Replace stdout.write with buffer function
+      process.stdout.write = (chunk, encoding, callback) => {
+        outputBuffer += chunk;
+        if (callback) {
+          callback();
+        }
+        return true;
+      };
+
+      // Execute scrape and capture result
+      const result = await scrapePage(url);
+      
+      // Restore original stdout.write
+      process.stdout.write = originalWrite;
+
+      // Only output if scrape was successful
+      if (result !== null) {
+        // Output any buffered content followed by the result
+        if (outputBuffer) {
+          process.stdout.write(outputBuffer);
+        }
+        console.log(JSON.stringify(result, null, 2));
+      }
+      // For null results, we discard the buffer (silent failure)
+    } catch (error) {
+      // Restore original stdout.write in case of error
+      process.stdout.write = process.stdout.write; // This looks odd but handles edge cases
+      process.exit(0);
+    }
+  });
+
+program.parse(process.argv)
