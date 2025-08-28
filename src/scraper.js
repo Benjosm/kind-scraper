@@ -2,7 +2,42 @@ const axios = require('axios');
 const { JSDOM } = require('jsdom');
 const { checkRobots } = require('./utils/robotsChecker');
 
-async function scrapePage(url) {
+/**
+ * Scrapes a webpage and extracts relevant data.
+ * @param {string} url - The URL of the webpage to scrape.
+ * @param {Object} [options={}] - Configuration options for the HTTP request.
+ * @param {Object} [options.headers] - HTTP headers to include with the request. Merged with default headers (including 'User-Agent': 'KindWebScraper'), with user-specified headers taking precedence.
+ * @param {string} [options.responseType="text"] - Expected response type from the server. Must be 'text' to ensure HTML content is received as a string; other values may cause parsing errors.
+ * @param {number} [options.timeout=5000] - Request timeout duration in milliseconds (default: 5000).
+ * @returns {Promise<{title: string, links: string[]}>} Promise that resolves to an object containing scraped data (e.g., title, links).
+ * @throws {Error} If the provided URL is invalid (malformed).
+ * @throws {Error} If access to the URL is disallowed by robots.txt.
+ * @throws {Error} If a network error occurs during the HTTP request (e.g., connection timeout, DNS failure).
+ * @throws {Error} If the HTTP response status is not 200 (e.g., 404 or 500 error).
+ * @throws {Error} If the response contains empty or non-string HTML content.
+ * @throws {Error} If the HTML content cannot be parsed (e.g., due to malformed structure).
+ * 
+ * @example
+ * Basic usage without options:
+ * ```js
+ * const result = await scrapePage("https://example.com");
+ * console.log(result.title);
+ * ```
+ * 
+ * @example
+ * Advanced usage with custom headers and timeout:
+ * ```js
+ * const result = await scrapePage("https://example.com", {
+ *   headers: {
+ *     "Custom-Header": "Value",
+ *     "User-Agent": "MyScraper/1.0"
+ *   },
+ *   timeout: 10000
+ * });
+ * console.log(result.links);
+ * ```
+ */
+async function scrapePage(url, options = {}) {
   // Validate URL format before making any requests
   try {
     new URL(url);
@@ -17,15 +52,27 @@ async function scrapePage(url) {
   }
 
   try {
-    // Enforce 1-second delay between requests after robots check
+    // Add 1-second delay before each request after robots check
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Fetch the URL with axios as text to ensure response.data is a string
     // with the required User-Agent header
-    const response = await axios.get(url, {
+    // Merge provided options with defaults
+    const defaultOptions = {
       headers: { 'User-Agent': 'KindWebScraper' },
-      responseType: 'text'
-    });
+      responseType: 'text',
+      timeout: 5000 // Default 5-second timeout
+    };
+    const finalOptions = {
+      ...defaultOptions,
+      ...options,
+      headers: {
+        ...defaultOptions.headers,
+        ...options.headers
+      }
+    };
+    
+    const response = await axios.get(url, finalOptions);
 
     // Check if response status is not 200
     if (response.status !== 200) {
