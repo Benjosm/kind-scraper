@@ -3,29 +3,30 @@ const { JSDOM } = require('jsdom');
 const { checkRobots } = require('./utils/robotsChecker');
 
 async function scrapePage(url) {
-  console.log(`Requesting ${url}...`);
-  
+  // Check robots.txt compliance first, before any try/catch
+  const isAllowed = await checkRobots(url);
+  if (!isAllowed) {
+    throw new Error("Robots.txt compliance check failed. Scraping not allowed.");
+  }
+
   try {
-    // Check robots.txt compliance
-    const isAllowed = await checkRobots(url);
-    console.log(`Robots check: ${isAllowed}`);
-    
-    if (!isAllowed) {
-      return null;
-    }
+    console.log("Requesting...");
     
     // Enforce 1-second delay between requests after robots check
     await new Promise(resolve => setTimeout(resolve, 1000));
     
+    console.log("Processing...");
+    
     // Fetch the URL with axios as text to ensure response.data is a string
+    // with the required User-Agent header
     const response = await axios.get(url, { 
-      validateStatus: () => true,
+      headers: { 'User-Agent': 'KindWebScraper' },
       responseType: 'text'
     });
     
     // Check if response status is not 200
     if (response.status !== 200) {
-      return null;
+      return { title: "", links: [] };
     }
     
     // Check if response data is empty or not a string
@@ -72,8 +73,11 @@ async function scrapePage(url) {
     
     return { title, links };
   } catch (error) {
-    // Handle all other errors including network issues, URL parsing errors, etc.
-    return null;
+    // Handle network errors and other exceptions
+    if (error.code && (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT')) {
+      console.error(error.message);
+    }
+    return { title: "", links: [] };
   }
 }
 
