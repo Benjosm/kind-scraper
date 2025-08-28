@@ -13,7 +13,7 @@ async function scrapePage(url) {
   // Check robots.txt compliance first
   const isAllowed = await checkRobots(url);
   if (!isAllowed) {
-    throw new Error("Robots.txt compliance check failed. Scraping not allowed.");
+    throw new Error(`Scraping disallowed for ${url}`);
   }
 
   try {
@@ -52,6 +52,8 @@ async function scrapePage(url) {
     }
     
     // Extract title
+    console.log('DEBUG: Extracted title length:', document.title.length);
+    console.log('DEBUG: First 100 chars of HTML:', html.substring(0, 100));
     const title = document.title || "";
     
     // Extract up to first 3 links
