@@ -1,4 +1,5 @@
 const axios = require('axios');
+const nock = require('nock');
 const { JSDOM } = require('jsdom');
 const { scrapePage } = require('../lib/scraper');
 const { checkRobots } = require('../lib/utils/robotsChecker');
@@ -14,6 +15,8 @@ jest.mock('../lib/utils/robotsChecker', () => ({
 
 // Mock console.log
 jest.spyOn(console, 'log').mockImplementation(() => {});
+
+jest.mock('axios');
 
 describe('scrapePage', () => {
   const VALID_URL = 'http://example.com';
