@@ -42,13 +42,13 @@ async function scrapePage(url, options = {}) {
   try {
     new URL(url);
   } catch (error) {
-    throw new Error(`Invalid URL: ${url}`);
+    throw new Error(`Invalid URL provided. Please enter a valid URL (e.g., https://example.com).`);
   }
-
+  
   // Check robots.txt compliance first
   const isAllowed = await checkRobots(url);
   if (!isAllowed) {
-    throw new Error(`Scraping disallowed for ${url}`);
+    throw new Error(`Scraping disallowed by robots.txt for ${url}. Check the website's robots.txt file for allowed paths.`);
   }
 
   try {
@@ -76,22 +76,22 @@ async function scrapePage(url, options = {}) {
 
     // Check if response status is not 200
     if (response.status !== 200) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      throw new Error(`Unable to retrieve content from the website. Received HTTP ${response.status}: ${response.statusText}. Check the URL and try again.`);
     }
-
+    
     // Check if response data is empty or not a string
     const html = response.data;
     if (!html || typeof html !== 'string') {
-      throw new Error("Empty or invalid HTML content received");
+      throw new Error("Received empty or invalid content from the website. The page might be protected or experiencing issues.");
     }
-
+    
     // Parse HTML with jsdom (wrapped in inner try to handle malformed HTML)
     let document;
     try {
       const dom = new JSDOM(html, { url });
       document = dom.window.document;
     } catch (parseError) {
-      throw new Error("Failed to parse HTML content");
+      throw new Error("Unable to process the webpage content. The HTML might be malformed or incompatible.");
     }
 
     // Extract title
