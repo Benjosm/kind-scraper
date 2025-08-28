@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { JSDOM } = require('jsdom');
-const { checkRobots } = require('./utils/robotsChecker');
+const { checkRobots } = require('./robots-check');
 
 /**
  * Scrapes a webpage and extracts relevant data.
@@ -50,7 +50,8 @@ async function scrapePage(url, options = {}) {
   if (!isAllowed) {
     throw new Error(`Scraping disallowed by robots.txt for ${url}. Check the website's robots.txt file for allowed paths.`);
   }
-
+  console.log("Robots allowed");
+  
   try {
     // Add 1-second delay before each request after robots check
     await new Promise(resolve => setTimeout(resolve, 1000));
