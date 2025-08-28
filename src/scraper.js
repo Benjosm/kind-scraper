@@ -17,31 +17,27 @@ async function scrapePage(url) {
   }
 
   try {
-    console.log("Requesting...");
-    
     // Enforce 1-second delay between requests after robots check
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    console.log("Processing...");
-    
+
     // Fetch the URL with axios as text to ensure response.data is a string
     // with the required User-Agent header
-    const response = await axios.get(url, { 
+    const response = await axios.get(url, {
       headers: { 'User-Agent': 'KindWebScraper' },
       responseType: 'text'
     });
-    
+
     // Check if response status is not 200
     if (response.status !== 200) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
-    
+
     // Check if response data is empty or not a string
     const html = response.data;
     if (!html || typeof html !== 'string') {
       throw new Error("Empty or invalid HTML content received");
     }
-    
+
     // Parse HTML with jsdom (wrapped in inner try to handle malformed HTML)
     let document;
     try {
@@ -50,12 +46,10 @@ async function scrapePage(url) {
     } catch (parseError) {
       throw new Error("Failed to parse HTML content");
     }
-    
+
     // Extract title
-    console.log('DEBUG: Extracted title length:', document.title.length);
-    console.log('DEBUG: First 100 chars of HTML:', html.substring(0, 100));
     const title = document.title || "";
-    
+
     // Extract up to first 3 links
     const linkElements = document.querySelectorAll('a');
     const seenLinks = new Set();
@@ -79,7 +73,7 @@ async function scrapePage(url) {
         }
       }
     }
-    
+
     return { title, links };
   } catch (error) {
     // Re-throw the error to be handled by the caller

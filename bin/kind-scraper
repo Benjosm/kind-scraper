@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { Command } from 'commander';
-import { scrapePage } from '../lib/scraper.js';
+const { Command } = require('commander');
+const { scrapePage } = require('../lib/scraper.js');
 
 const program = new Command();
 
