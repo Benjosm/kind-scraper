@@ -4,17 +4,23 @@ const { program } = require('commander');
 const path = require('path');
 const { scrapePage } = require(path.join(__dirname, '..', 'lib', 'scraper'));
 
-const { version } = require(path.join(__dirname, '..', 'package.json')); program.version(version);
+const { version } = require(path.join(__dirname, '..', 'package.json'));
+program.version(version);
 
 program
   .command('scrape <url>')
   .description('Scrape a webpage and output structured JSON data')
   .action(async (url) => {
-    const result = await scrapePage(url);
-    if (result !== null) {
-      console.log(JSON.stringify(result));
+    try {
+      const result = await scrapePage(url);
+      if (result !== null) {
+        console.log(JSON.stringify(result));
+      }
+      process.exit(0);
+    } catch (err) {
+      console.error("Error:", err.message);
+      process.exit(1);
     }
-    process.exit(0);
   });
 
 program.parse(process.argv)
