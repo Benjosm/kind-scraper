@@ -16,10 +16,13 @@ pids
 
 # OS generated files
 .DS_Store
+Thumbs.db # For Windows systems
 
 # IDE/Editor configuration
 .vscode/
 .idea/
+*.sublime-project
+*.sublime-workspace
 
 # Environment variables
 .env
@@ -40,3 +43,25 @@ pids
 # junit.xml
 # report.xml
 # .nyc_output/
+
+# Optional: If you encounter Electron build artifacts
+# dist-electron/
+# .vite/
+# electron-builder.yml
+
+# Optional: If using a package manager like pnpm that might cache packages
+# .pnpm-debug.log  # Included in logs section, but sometimes explicitly added
+# pnpm-store/      # Only if storing packages locally within the project
+
+# Optional: If using next.js or similar frameworks
+# .next/
+
+# Optional: If using Parcel bundler
+# .parcel-cache/
+
+# Optional: If using Vite
+# .vite/
+
+# Temporary files & caches
+*.tmp
+*.swp # Vim swap files
