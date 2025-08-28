@@ -1,26 +1,25 @@
 #!/usr/bin/env node
 
-const { program } = require('commander');
-const path = require('path');
-const { scrapePage } = require(path.join(__dirname, '..', 'lib', 'scraper'));
+import { Command } from 'commander';
+import { scrapePage } from '../lib/scraper.js';
 
-const { version } = require(path.join(__dirname, '..', 'package.json'));
-program.version(version);
+const program = new Command();
+
+program.version('0.1.0');
 
 program
   .command('scrape <url>')
-  .description('Scrape a webpage and output structured JSON data')
+  .description('Scrape a webpage for title and first 3 links')
   .action(async (url) => {
     try {
       const result = await scrapePage(url);
-      if (result !== null) {
-        console.log(JSON.stringify(result));
-      }
-      process.exit(0);
-    } catch (err) {
-      console.error("Error:", err.message);
+      console.log(JSON.stringify(result));
+    } catch (error) {
+      // Log the error message to stderr without exposing stack traces
+      console.error(`Error: ${error.message}`);
+      // Exit with non-zero code
       process.exit(1);
     }
   });
 
-program.parse(process.argv)
+program.parse(process.argv);
