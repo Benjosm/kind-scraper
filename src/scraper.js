@@ -3,7 +3,14 @@ const { JSDOM } = require('jsdom');
 const { checkRobots } = require('./utils/robotsChecker');
 
 async function scrapePage(url) {
-  // Check robots.txt compliance first, before any try/catch
+  // Validate URL format before making any requests
+  try {
+    new URL(url);
+  } catch (error) {
+    throw new Error(`Invalid URL: ${url}`);
+  }
+
+  // Check robots.txt compliance first
   const isAllowed = await checkRobots(url);
   if (!isAllowed) {
     throw new Error("Robots.txt compliance check failed. Scraping not allowed.");
@@ -26,13 +33,13 @@ async function scrapePage(url) {
     
     // Check if response status is not 200
     if (response.status !== 200) {
-      return { title: "", links: [] };
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
     
     // Check if response data is empty or not a string
     const html = response.data;
     if (!html || typeof html !== 'string') {
-      return { title: "", links: [] };
+      throw new Error("Empty or invalid HTML content received");
     }
     
     // Parse HTML with jsdom (wrapped in inner try to handle malformed HTML)
@@ -41,7 +48,7 @@ async function scrapePage(url) {
       const dom = new JSDOM(html, { url });
       document = dom.window.document;
     } catch (parseError) {
-      return { title: "", links: [] };
+      throw new Error("Failed to parse HTML content");
     }
     
     // Extract title
@@ -73,11 +80,8 @@ async function scrapePage(url) {
     
     return { title, links };
   } catch (error) {
-    // Handle network errors and other exceptions
-    if (error.code && (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED' || error.code === 'ETIMEDOUT')) {
-      console.error(error.message);
-    }
-    return { title: "", links: [] };
+    // Re-throw the error to be handled by the caller
+    throw error;
   }
 }
 
