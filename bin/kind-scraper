@@ -5,9 +5,9 @@ const { scrapePage } = require('../lib/scraper.js');
 
 const program = new Command();
 
-program.version('0.1.0');
-
 program
+  .version('0.1.0')
+  .exitOverride()
   .command('scrape <url>')
   .description('Scrape a webpage for title and first 3 links')
   .action(async (url) => {
@@ -16,10 +16,20 @@ program
       console.log(JSON.stringify(result));
     } catch (error) {
       // Log the error message to stderr without exposing stack traces
-      console.error(`Error: ${error.message}`);
+      // Ensure error messages start with "Error: "
+      const errorMessage = error.message.startsWith('Error: ') ? error.message : `Error: ${error.message}`;
+      console.error(errorMessage);
       // Exit with non-zero code
       process.exit(1);
     }
   });
 
-program.parse(process.argv);
+try {
+  program.parse(process.argv);
+} catch (error) {
+  // Catch command parsing errors (e.g., invalid usage, unknown commands)
+  if (error.code !== 'commander.helpDisplayed') {
+    console.error(`Error: ${error.message}`);
+  }
+  process.exit(1);
+}
