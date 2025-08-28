@@ -73,20 +73,26 @@ kind-scraper --version
 ## Core Logic
 
 ### `lib/scraper.js`
-Implements the main `scrapePage(url)` function:
+Implements the main `scrapePage(url, options)` function:
 ```js
-scrapePage(url): Promise<{title: string, links: string[]}>
+scrapePage(url, options): Promise<{title: string, links: string[]}>
 ```
 - Applies a 1-second delay before making requests
-- Fetches page content using `axios`
+- Fetches page content using `axios` with configurable options (headers, timeout)
+- Merges provided options with defaults (e.g., User-Agent: 'KindWebScraper', timeout: 5000ms)
 - Parses HTML with `jsdom` to extract the `<title>` and top 3 anchor `href` values
-- Returns structured JSON
-- Handles errors silently (logs to stderr, no crash)
+- Returns structured JSON on success
+- Throws an error on any failure (invalid URL, robots disallow, HTTP error, empty content, or parsing issue), which must be caught by the caller
 
 **Verification**:  
 Run directly:
 ```bash
-node -e "require('./lib/scraper').scrapePage('https://example.com').then(console.log)"
+node -e "require('./lib/scraper').scrapePage('https://example.com').then(console.log).catch(console.error)"
+```
+
+With custom options:
+```bash
+node -e "require('./lib/scraper').scrapePage('https://example.com', { timeout: 10000, headers: { 'User-Agent': 'MyBot' } }).then(console.log).catch(console.error)"
 ```
 
 ### `lib/robots-check.js`
