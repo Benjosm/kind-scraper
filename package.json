@@ -8,7 +8,8 @@
   },
   "scripts": {
     "prepare": "mkdir -p lib && cp src/*.js lib/",
-    "test": "jest"
+    "test": "jest",
+    "test:unit": "jest --ci --verbose src/test-robots.spec.js test/scraper.spec.js"
   },
   "devDependencies": {
     "jest": "^29.0.0",
