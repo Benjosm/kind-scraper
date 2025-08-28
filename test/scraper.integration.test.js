@@ -22,15 +22,10 @@ describe('scrapePage integration tests', () => {
     expect(result.links).toContain('https://www.iana.org/domains/example');
     expect(result.links.length).toBeGreaterThan(0);
   });
-
-  it('verifies httpbin.org/robots.txt disallows /deny', async () => {
-    const response = await axios.get('https://httpbin.org/robots.txt');
-    expect(response.data).toMatch(/Disallow:\s*\/deny/i);
-  });
   
   it('should respect robots.txt disallow directive', async () => {
     // Mock the robots.txt response to disallow scraping
-    const scope = nock(/httpbin\.org/)
+    const scope = nock('https://httpbin.org')
       .get('/robots.txt')
       .reply(200, 'User-agent: *\nDisallow: /deny');
   
@@ -101,7 +96,7 @@ describe('scrapePage integration tests', () => {
   it('should handle network timeouts', async () => {
     jest.useFakeTimers();
     const scrapePromise = scrapePage('https://httpbin.org/delay/10');
-    jest.advanceTimersByTime(1000);
+    jest.advanceTimersByTime(5000);
     await expect(scrapePromise).rejects.toThrow('Network request timed out');
   });
 });

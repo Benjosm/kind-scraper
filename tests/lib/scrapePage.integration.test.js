@@ -109,4 +109,16 @@ describe('scrapePage integration tests', () => {
 
     await expect(scrapePage(url)).rejects.toThrow('Network error');
   });
+
+  it('should handle network timeouts', async () => {
+    // Mock a request that takes longer than the timeout
+    nock('https://httpbin.org')
+      .get('/delay/10')
+      .delay(6000) // Longer than default 5000ms timeout
+      .reply(200, '<html><title>Test</title></html>');
+    
+    await expect(scrapePage('https://httpbin.org/delay/10'))
+      .rejects
+      .toThrow('Network request timed out');
+  });
 });
