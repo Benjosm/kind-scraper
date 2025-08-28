@@ -6,7 +6,8 @@ const { scrapePage } = require('../lib/scraper.js');
 const program = new Command();
 
 program
-  .version('0.1.0')
+  .name('kind-scraper')
+  .version('0.1.0', '-v, --version')
   .exitOverride()
   .command('scrape <url>')
   .description('Scrape a webpage for title and first 3 links')
@@ -28,8 +29,17 @@ try {
   program.parse(process.argv);
 } catch (error) {
   // Catch command parsing errors (e.g., invalid usage, unknown commands)
-  if (error.code !== 'commander.helpDisplayed') {
+  // Commander throws errors for help/version displays, so we need to handle them differently
+  if (error.code === 'commander.executeSubCommandAsync') {
+    // This is the error code for async command execution failures
+    const errorMessage = error.message.startsWith('Error: ') ? error.message : `Error: ${error.message}`;
+    console.error(errorMessage);
+    process.exit(1);
+  } else if (error.code !== 'commander.helpDisplayed' && error.code !== 'commander.version') {
+    // For any other unexpected errors (not help or version)
     console.error(`Error: ${error.message}`);
+    process.exit(1);
   }
-  process.exit(1);
+  // For help/version commands that are handled by commander, we don't need to do anything
+  // They have already been displayed and commander will handle the exit
 }
