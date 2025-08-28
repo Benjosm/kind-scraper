@@ -1,14 +1,9 @@
 # Project Setup Instructions
-1. Installed dependencies: 
-   npm install axios@1.7.2 jsdom@24.1.0 commander@11.1.0
-2. Created directory structure: 
-   mkdir -p bin lib
-3. Configured package.json with CLI entry point
-4. Created executable CLI script: 
-   chmod +x bin/kind-scraper
-5. Linked globally for CLI access: 
-   npm install -g .
+1. Installed all project dependencies with: npm install
+   - This automatically ran the prepare script to copy source files to lib/
+   - Installed packages: axios, jsdom, commander, nyc, mocha, and others per package.json
 
 Verification:
-- Run "kind-scraper --help" to see CLI is operational
-- Project structure now matches plan in project_plan.txt
+- Development environment is ready
+- Testing is configured (nyc and mocha)
+- Source files compiled to lib/ directory
