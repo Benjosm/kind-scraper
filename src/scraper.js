@@ -42,19 +42,24 @@ async function scrapePage(url, options = {}) {
   try {
     new URL(url);
   } catch (error) {
-    throw new Error(`Invalid URL provided. Please enter a valid URL (e.g., https://example.com).`);
+    console.error(`Invalid URL: ${url}. Error: ${error.message}`);
+    return { title: '', links: [] };
   }
   
   // Check robots.txt compliance first
   const isAllowed = await checkRobots(url);
   if (!isAllowed) {
-    throw new Error(`Scraping disallowed by robots.txt for ${url}. Check the website's robots.txt file for allowed paths.`);
+    console.error(`Scraping disallowed by robots.txt for ${url}.`);
+    return { title: '', links: [] };
   }
-  console.log("Robots allowed");
+  
+  console.log("Requesting...");
   
   try {
     // Add 1-second delay before each request after robots check
     await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    console.log("Processing...");
 
     // Fetch the URL with axios as text to ensure response.data is a string
     // with the required User-Agent header
@@ -123,9 +128,10 @@ async function scrapePage(url, options = {}) {
     }
 
     return { title, links };
+  
   } catch (error) {
-    // Re-throw the error to be handled by the caller
-    throw error;
+    console.error(`Error during scraping: ${error.message}`);
+    return { title: '', links: [] };
   }
 }
 
