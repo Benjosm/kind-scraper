@@ -49,8 +49,7 @@ async function scrapePage(url, options = {}) {
   // Check robots.txt compliance first
   const isAllowed = await checkRobots(url);
   if (!isAllowed) {
-    console.error(`Scraping disallowed by robots.txt for ${url}.`);
-    return { title: '', links: [] };
+    throw new Error(`Scraping disallowed by robots.txt for ${url}.`);
   }
   
   console.log("Requesting...");
