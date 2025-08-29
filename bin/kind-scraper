@@ -1,45 +1,30 @@
 #!/usr/bin/env node
-
-const { Command } = require('commander');
-const { scrapePage } = require('../lib/scraper.js');
-
-const program = new Command();
+const { program } = require('commander');
+const { scrapePage } = require('../lib/scrape');
 
 program
-  .name('kind-scraper')
   .version('0.1.0', '-v, --version')
-  .exitOverride()
   .command('scrape <url>')
-  .description('Scrape a webpage for title and first 3 links')
+  .description('Scrape a webpage and output structured JSON data')
   .action(async (url) => {
     try {
-      const result = await scrapePage(url);
-      console.log(JSON.stringify(result));
+      new URL(url);
+    } catch (e) {
+      console.error(`Error: Invalid URL format - ${e.message}`);
+      process.exit(1);
+    }
+
+    try {
+      const data = await scrapePage(url);
+      console.log(JSON.stringify(data));
     } catch (error) {
-      // Log the error message to stderr without exposing stack traces
-      // Ensure error messages start with "Error: "
-      const errorMessage = error.message.startsWith('Error: ') ? error.message : `Error: ${error.message}`;
-      console.error(errorMessage);
-      // Exit with non-zero code
+      console.error(`Error: ${error.message}`);
       process.exit(1);
     }
   });
 
-try {
-  program.parse(process.argv);
-} catch (error) {
-  // Catch command parsing errors (e.g., invalid usage, unknown commands)
-  // Commander throws errors for help/version displays, so we need to handle them differently
-  if (error.code === 'commander.executeSubCommandAsync') {
-    // This is the error code for async command execution failures
-    const errorMessage = error.message.startsWith('Error: ') ? error.message : `Error: ${error.message}`;
-    console.error(errorMessage);
-    process.exit(1);
-  } else if (error.code !== 'commander.helpDisplayed' && error.code !== 'commander.version') {
-    // For any other unexpected errors (not help or version)
-    console.error(`Error: ${error.message}`);
-    process.exit(1);
-  }
-  // For help/version commands that are handled by commander, we don't need to do anything
-  // They have already been displayed and commander will handle the exit
+program.parse(process.argv);
+
+if (!process.argv.slice(2).length) {
+  program.outputHelp();
 }
