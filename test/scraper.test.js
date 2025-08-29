@@ -86,17 +86,27 @@ describe('scrapePage', () => {
 
   it('should validate URL and return empty result for invalid URLs', async () => {
     const result = await scrapePage('not-a-valid-url');
-
+  
     // Check error was logged
     expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('Invalid URL'));
-
+  
     // Check function returns default object
     expect(result).toEqual({ title: '', links: [] });
   });
-
+  
+  it('should throw an error when robots compliance check fails', async () => {
+    checkRobots.mockResolvedValue(false);
+    
+    await expect(scrapePage('https://example.com'))
+      .rejects
+      .toThrow('Scraping disallowed by robots.txt for https://example.com.');
+    
+    expect(checkRobots).toHaveBeenCalledWith('https://example.com');
+  });
+  
   it('should check robots.txt before scraping', async () => {
     await scrapePage('https://example.com');
-
+  
     // Check that checkRobots was called
     expect(checkRobots).toHaveBeenCalledWith('https://example.com');
   });
