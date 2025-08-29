@@ -7,13 +7,7 @@
     "kind-scraper": "./bin/kind-scraper"
   },
   "scripts": {
-    "prepare": "mkdir -p lib && cp src/*.js lib/",
-    "test": "jest",
-    "test:unit": "jest --ci --verbose src/test-robots.spec.js test/scraper.spec.js"
-  },
-  "devDependencies": {
-    "jest": "^29.7.0",
-    "nock": "^13.5.0"
+    "prepare": "mkdir -p lib && cp src/*.js lib/"
   },
   "dependencies": {
     "axios": "1.7.2",

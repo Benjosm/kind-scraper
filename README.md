@@ -161,6 +161,36 @@ Clean install → functional JSON output on first run.
 - **Error Handling**: All external failures (e.g., invalid URLs, network issues) result in silent fallbacks—no application crashes.
 - **Verification**: Works reliably against `https://example.com` in under 10 seconds with live JSON output.
 
+## Manual Verification of Scraper Core Functionality
+
+To verify the scraper works as expected, perform the following steps manually:
+
+1. **Run against a valid URL**  
+   Execute:  
+   ```bash
+   npx kind-scraper scrape http://example.com
+   ```  
+   Verify the output includes:  
+   - The page title of the website  
+   - The top 3 outbound links from the page  
+
+2. **Test error handling with an invalid URL**  
+   Execute:  
+   ```bash
+   npx kind-scraper scrape http://invalid-url-that-does-not-exist.example
+   ```  
+   Verify the tool returns a clear error message indicating the request failed (e.g., "Error: Failed to fetch page").  
+
+3. **Verify robots.txt compliance**  
+   Execute:  
+   ```bash
+   npx kind-scraper scrape https://twitter.com
+   ```  
+   Verify the tool respects robots.txt rules and either skips scraping or clearly reports restricted access.  
+   > **Note**: In the current version, the robots.txt check is stubbed and always allows access. This step ensures the integration point works; future versions will implement real parsing.
+
+Each verification step should take less than 2 minutes. Perform all steps when making changes to the scraper logic.
+
 ## Dependencies
 - Node.js (required)
 - `axios@1.7.2`: For reliable HTTP requests with redirects and status handling

@@ -1,64 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1756417323418" clover="3.2.0">
-  <project timestamp="1756417323418" name="All files">
-    <metrics statements="46" coveredstatements="40" conditionals="17" coveredconditionals="10" methods="3" coveredmethods="3" elements="66" coveredelements="53" complexity="0" loc="46" ncloc="46" packages="2" files="2" classes="2"/>
-    <package name="lib">
-      <metrics statements="44" coveredstatements="38" conditionals="17" coveredconditionals="10" methods="2" coveredmethods="2"/>
-      <file name="scraper.js" path="/usr/src/kind-scraper/lib/scraper.js">
-        <metrics statements="44" coveredstatements="38" conditionals="17" coveredconditionals="10" methods="2" coveredmethods="2"/>
-        <line num="1" count="1" type="stmt"/>
-        <line num="2" count="1" type="stmt"/>
-        <line num="3" count="1" type="stmt"/>
-        <line num="42" count="4" type="stmt"/>
-        <line num="43" count="4" type="stmt"/>
-        <line num="45" count="0" type="stmt"/>
-        <line num="49" count="4" type="stmt"/>
-        <line num="50" count="4" type="cond" truecount="1" falsecount="1"/>
-        <line num="51" count="0" type="stmt"/>
-        <line num="54" count="4" type="stmt"/>
-        <line num="55" count="4" type="stmt"/>
-        <line num="56" count="2" type="stmt"/>
-        <line num="57" count="2" type="stmt"/>
-        <line num="62" count="2" type="stmt"/>
-        <line num="67" count="2" type="stmt"/>
-        <line num="76" count="2" type="stmt"/>
-        <line num="79" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="80" count="0" type="stmt"/>
-        <line num="84" count="1" type="stmt"/>
-        <line num="85" count="1" type="cond" truecount="3" falsecount="1"/>
-        <line num="86" count="0" type="stmt"/>
-        <line num="91" count="1" type="stmt"/>
-        <line num="92" count="1" type="stmt"/>
-        <line num="93" count="1" type="stmt"/>
-        <line num="95" count="0" type="stmt"/>
-        <line num="99" count="1" type="cond" truecount="1" falsecount="1"/>
-        <line num="102" count="1" type="stmt"/>
-        <line num="103" count="1" type="stmt"/>
-        <line num="104" count="1" type="stmt"/>
-        <line num="105" count="1" type="stmt"/>
-        <line num="106" count="1" type="stmt"/>
-        <line num="107" count="2" type="cond" truecount="1" falsecount="1"/>
-        <line num="108" count="2" type="stmt"/>
-        <line num="109" count="2" type="cond" truecount="1" falsecount="1"/>
-        <line num="110" count="2" type="stmt"/>
-        <line num="112" count="2" type="stmt"/>
-        <line num="113" count="2" type="cond" truecount="1" falsecount="1"/>
-        <line num="114" count="2" type="stmt"/>
-        <line num="115" count="2" type="stmt"/>
-        <line num="116" count="2" type="stmt"/>
-        <line num="120" count="0" type="stmt"/>
-        <line num="125" count="1" type="stmt"/>
-        <line num="128" count="3" type="stmt"/>
-        <line num="132" count="1" type="stmt"/>
-      </file>
-    </package>
-    <package name="lib.utils">
-      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-      <file name="robotsChecker.js" path="/usr/src/kind-scraper/lib/utils/robotsChecker.js">
-        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-        <line num="4" count="4" type="stmt"/>
-        <line num="7" count="1" type="stmt"/>
-      </file>
-    </package>
+<coverage generated="1756422749967" clover="3.2.0">
+  <project timestamp="1756422749967" name="All files">
+    <metrics statements="43" coveredstatements="13" conditionals="17" coveredconditionals="3" methods="2" coveredmethods="2" elements="62" coveredelements="18" complexity="0" loc="43" ncloc="43" packages="1" files="1" classes="1"/>
+    <file name="scraper.js" path="/usr/src/kind-scraper/src/scraper.js">
+      <metrics statements="43" coveredstatements="13" conditionals="17" coveredconditionals="3" methods="2" coveredmethods="2"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="2" count="1" type="stmt"/>
+      <line num="3" count="1" type="stmt"/>
+      <line num="42" count="18" type="stmt"/>
+      <line num="43" count="18" type="stmt"/>
+      <line num="45" count="1" type="stmt"/>
+      <line num="49" count="17" type="stmt"/>
+      <line num="50" count="17" type="cond" truecount="2" falsecount="0"/>
+      <line num="51" count="1" type="stmt"/>
+      <line num="53" count="16" type="stmt"/>
+      <line num="55" count="16" type="stmt"/>
+      <line num="57" count="16" type="stmt"/>
+      <line num="62" count="0" type="stmt"/>
+      <line num="67" count="0" type="stmt"/>
+      <line num="76" count="0" type="stmt"/>
+      <line num="79" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="80" count="0" type="stmt"/>
+      <line num="84" count="0" type="stmt"/>
+      <line num="85" count="0" type="cond" truecount="0" falsecount="4"/>
+      <line num="86" count="0" type="stmt"/>
+      <line num="91" count="0" type="stmt"/>
+      <line num="92" count="0" type="stmt"/>
+      <line num="93" count="0" type="stmt"/>
+      <line num="95" count="0" type="stmt"/>
+      <line num="99" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="102" count="0" type="stmt"/>
+      <line num="103" count="0" type="stmt"/>
+      <line num="104" count="0" type="stmt"/>
+      <line num="105" count="0" type="stmt"/>
+      <line num="106" count="0" type="stmt"/>
+      <line num="107" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="108" count="0" type="stmt"/>
+      <line num="109" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="110" count="0" type="stmt"/>
+      <line num="112" count="0" type="stmt"/>
+      <line num="113" count="0" type="cond" truecount="0" falsecount="2"/>
+      <line num="114" count="0" type="stmt"/>
+      <line num="115" count="0" type="stmt"/>
+      <line num="116" count="0" type="stmt"/>
+      <line num="120" count="0" type="stmt"/>
+      <line num="125" count="0" type="stmt"/>
+      <line num="128" count="0" type="stmt"/>
+      <line num="132" count="1" type="stmt"/>
+    </file>
   </project>
 </coverage>
