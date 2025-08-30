@@ -135,3 +135,6 @@ async function scrapePage(url, options = {}) {
 }
 
 module.exports = { scrapePage };
+
+// Manual test for checkRobots function
+checkRobots('https://example.com/').then(result => console.log('Robots check result:', result));
