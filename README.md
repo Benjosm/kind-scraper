@@ -65,7 +65,8 @@ kind-scraper --version
 │   └── kind-scraper          # CLI entry (symlink, #!/usr/bin/env node)
 ├── lib
 │   ├── scraper.js            # Core scraping logic
-│   └── robots-check.js       # Robots.txt compliance (stubbed)
+│   └── utils
+│       └── robotsChecker.js  # Stubbed robots.txt compliance (always allows)
 ├── package.json              # Project metadata and dependencies
 └── README.md                 # This document
 ```
@@ -95,17 +96,22 @@ With custom options:
 node -e "require('./lib/scraper').scrapePage('https://example.com', { timeout: 10000, headers: { 'User-Agent': 'MyBot' } }).then(console.log).catch(console.error)"
 ```
 
-### `lib/robots-check.js`
+### `lib/utils/robotsChecker.js`
 Stubbed ethical compliance module:
 ```js
 checkRobots(url): Promise<boolean> // → always returns true (for now)
 ```
-- Currently hardcoded to allow all requests (`// TODO: Real robots parser`)
-- Simulates asynchronous check to allow future integration
-- Logs "Robots allowed" for verification
+- Hardcoded to allow all requests (real parser will be added later)
+- Maintains async interface for future implementation
+- Critical path for ethical scraping compliance
+- Logs "Robots allowed" during verification runs
 
 **Verification**:  
-Ensure scraper logs confirmation during execution.
+1. Confirm file exists with minimal implementation:
+```js
+module.exports = { checkRobots: (url) => Promise.resolve(true) };
+```
+2. Ensure scraper continues processing after robots check during execution
 
 ## Key Technologies & Justifications
 - **Node.js + Commander.js**: Enables instant CLI tooling with no build step; leverages preinstalled Node in containers
@@ -127,8 +133,8 @@ Ensure scraper logs confirmation during execution.
 Run against `https://example.com` → see clean JSON output within 10 seconds.
 
 ## Stubbing & Shortcuts (MVP Only)
-- **Robots check**: Hardcoded to `return true` with comment:  
-  `// TODO: Real robots.txt parser`
+- **Robots check**: Hardcoded to always return `true` with comment:  
+  `// TODO: Real robots.txt parser` in `lib/utils/robotsChecker.js`
 - **Request delay**: Fixed at 1000ms (comment: `// STUB: Replace with Crawl-delay parsing`)
 - **Error handling**: `try/catch` used to prevent crashes; invalid URLs log to stderr only
 
@@ -156,7 +162,7 @@ Clean install → functional JSON output on first run.
 
 ## Development Notes
 
-- **Robots Check**: Currently stubbed to always return `true`. A real `robots.txt` parser will be implemented in future versions.
+- **Robots Check**: Currently implemented in `lib/utils/robotsChecker.js` as always-returning-true stub. Full `robots.txt` parser will be implemented in next version.
 - **Request Delay**: Hardcoded to 1 second between requests to ensure polite scraping.
 - **Error Handling**: All external failures (e.g., invalid URLs, network issues) result in silent fallbacks—no application crashes.
 - **Verification**: Works reliably against `https://example.com` in under 10 seconds with live JSON output.
@@ -203,7 +209,7 @@ Each verification step should take less than 2 minutes. Perform all steps when m
 - [x] 1-second delay is visible via "Requesting..." and "Processing..." logs
 - [x] No external network calls occur during `npm install`
 - [x] Fails silently (without crashing) on invalid URLs (e.g., `https://invalid`)
-- [x] `tree` confirms expected file structure
+- [x] `tree` confirms expected file structure with utils directory
 - [x] Direct execution: `node -e "require('./lib/scraper')..."` returns data in <5s
 
 ## License
